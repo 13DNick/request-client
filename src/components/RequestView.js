@@ -51,6 +51,23 @@ const RequestView = (props) => {
                 }
         });
         setResp(response.data);
+        props.callBack(response.data.id);
+        reset();
+        updateURL();
+    }
+
+    const reset = () => {
+        setName(''); setEmail(''); setDepartment(''); setFile(null);
+        setEmployeeId(''); setEmploymentStatus('currently employed');
+    }
+
+    const updateURL = () => {
+        //change url
+        window.history.pushState({}, '', '/submitted');
+   
+        //tell components url has updated 
+        const navEvent = new PopStateEvent('popstate');
+        window.dispatchEvent(navEvent);
     }
 
     const hasEmptyFields = () => {
