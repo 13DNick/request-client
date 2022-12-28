@@ -12,7 +12,7 @@ const RequestView = (props) => {
     const [email, setEmail] = useState('');
     const [employeeId, setEmployeeId] = useState('');
     const [department, setDepartment] = useState('');
-    const [employmentStatus, setEmploymentStatus] = useState('');
+    const [employmentStatus, setEmploymentStatus] = useState('currently employed');
     const [resp, setResp] = useState('');
     const [file, setFile] = useState(null);
 
@@ -44,7 +44,7 @@ const RequestView = (props) => {
                     'Content-Type': 'multipart/form-data'
                 }
         });
-        setResp(response.data, console.log(resp.id));
+        setResp(response.data);
     }
     
     return(
@@ -83,6 +83,8 @@ const RequestView = (props) => {
                                        setEmployeeId={setEmployeeId}
                                        setDepartment={setDepartment}
                                        setEmploymentStatus={setEmploymentStatus}
+                                       name={name} email={email} employeeId={employeeId}
+                                       department={department} employmentStatus={employmentStatus} 
                                 />
                             </Grid.Column>
                             <Grid.Column>
