@@ -144,7 +144,7 @@ const EForm = (props) => {
 
     return(
         <form onSubmit={props.onFormSubmit} className="ui form">
-            <div className="ui card centered fluid">
+            <div className="ui card centered fluid green">
                 <div className="content">
                     <div className="header">Enter Personal Information</div>
                 </div>

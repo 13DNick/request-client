@@ -31,9 +31,15 @@ const RequestView = (props) => {
 
     const onFormSubmit = (e) => {
         e.preventDefault();
-
-        const request = Request(name, email, employeeId, department, employmentStatus);
-        submitRequest(request);
+        
+        if(hasEmptyFile()){
+            alert('Please upload a supporting document before submitting your request!');
+        } else if(hasEmptyFields()){
+            alert('Please ensure all fields are filled!');
+        } else {
+            const request = Request(name, email, employeeId, department, employmentStatus);
+            submitRequest(request);
+        }
     }
 
     const submitRequest = async (request) => {
@@ -45,6 +51,20 @@ const RequestView = (props) => {
                 }
         });
         setResp(response.data);
+    }
+
+    const hasEmptyFields = () => {
+        if(name === '' || email === '' || employeeId === '' || department === "" || employmentStatus === ''){
+            return true;
+        }
+        return false;
+    }
+
+    const hasEmptyFile = () => {
+        if(file === null){
+            return true;
+        }
+        return false;
     }
     
     return(
