@@ -1,11 +1,13 @@
-import React, {useState} from 'react';
+import React, {useState, useRef} from 'react';
 import { Container, Segment, Form, Grid, Button, Header, Icon } from 'semantic-ui-react';
 import Link from './Link';
 import backendAPI from '../api/backendAPI';
 import { Request } from '../entity/Request';
+import SelectedFile from './SelectedFile';
+import EForm from './EForm';
 
 
-const RequestView = () => {
+const RequestView = (props) => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [employeeId, setEmployeeId] = useState('');
@@ -14,6 +16,15 @@ const RequestView = () => {
     const [resp, setResp] = useState('');
     const [file, setFile] = useState(null);
 
+    // Create a reference to the hidden file input element
+    const hiddenFileInput = useRef(null);
+    
+    // Programatically click the hidden file input element
+    // when the Button component is clicked
+    const handleClick = event => {
+        hiddenFileInput.current.click();
+    }; 
+   
     const onFileSubmit = (e) => {
         e.preventDefault();
     }
@@ -67,46 +78,12 @@ const RequestView = () => {
                 <Grid divided='vertically' stackable>
                     <Grid.Row columns={2}>
                             <Grid.Column>
-                                <form onSubmit={onFormSubmit} className="ui form">
-                                    <div className="ui card centered">
-                                        <div className="content">
-                                            <div className="header">Enter Personal Information</div>
-                                        </div>
-                                        <div className="content">
-                                            <Form.Input label="Name" 
-                                                        placeholder="John Doe"
-                                                        onChange={(e) => {setName(e.target.value)}}       
-                                            /> 
-                                            
-                                            <Form.Input label="Email Address" 
-                                                        placeholder="doe@gmail.com"
-                                                        onChange={(e) => {setEmail(e.target.value)}} 
-                                            /> 
-                                            
-                                        </div>
-                                        
-                                        <div className="content">
-                                            <Form.Input label="Employee ID" 
-                                                        placeholder="000123"
-                                                        onChange={(e) => {setEmployeeId(e.target.value)}} 
-                                            /> 
-                                            <Form.Input label="Department" 
-                                                        placeholder="IT"
-                                                        onChange={(e) => {setDepartment(e.target.value)}} 
-                                            /> 
-                                            <Form.Input label="Employment Status" 
-                                                        placeholder="active"
-                                                        onChange={(e) => {setEmploymentStatus(e.target.value)}} 
-                                            /> 
-                                        </div>
-
-                                        <div className="content">
-                                            <button className="ui green fluid button" style={{fontSize:'1em'}}>
-                                                Submit Request
-                                            </button>
-                                        </div>
-                                    </div>
-                                </form>
+                                <EForm onFormSubmit={onFormSubmit} 
+                                       setName={setName} setEmail={setEmail}
+                                       setEmployeeId={setEmployeeId}
+                                       setDepartment={setDepartment}
+                                       setEmploymentStatus={setEmploymentStatus}
+                                />
                             </Grid.Column>
                             <Grid.Column>
                                 <Segment padded='very' textAlign='center'>
@@ -115,10 +92,13 @@ const RequestView = () => {
                                         Please Attach Your Request Document
                                     </Header>
                                     <Form onSubmit={onFileSubmit}>
-                                        <Form.Input type='file'
-                                                    onChange={(e) => {setFile(e.target.files[0])}} 
+                                        <input type='file'
+                                               ref={hiddenFileInput}
+                                               onChange={(e) => {setFile(e.target.files[0])}}
+                                               style={{display: 'none'}} 
                                         />
-                                        <Button primary size='big'>Add Document</Button>
+                                        <Button primary size='big' onClick={handleClick}>Add Document</Button>
+                                        <SelectedFile file={file} />
                                     </Form>
                                 </Segment>
                             </Grid.Column>
