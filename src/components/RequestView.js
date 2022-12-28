@@ -4,6 +4,7 @@ import Link from './Link';
 import backendAPI from '../api/backendAPI';
 import { Request } from '../entity/Request';
 
+
 const RequestView = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
@@ -11,7 +12,12 @@ const RequestView = () => {
     const [department, setDepartment] = useState('');
     const [employmentStatus, setEmploymentStatus] = useState('');
     const [resp, setResp] = useState('');
-    
+    const [file, setFile] = useState(null);
+
+    const onFileSubmit = (e) => {
+        e.preventDefault();
+    }
+
     const onFormSubmit = (e) => {
         e.preventDefault();
 
@@ -20,14 +26,14 @@ const RequestView = () => {
     }
 
     const submitRequest = async (request) => {
-        const jsonRequest = JSON.stringify(request);
-        const response = await backendAPI.post('/api/request', jsonRequest, {
+        const r = JSON.stringify(request);
+        const data = {r, file};
+        const response = await backendAPI.post('/upload', data, {
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'multipart/form-data'
                 }
         });
-        setResp(response.data);
-        console.log(resp);
+        setResp(response.data, console.log(resp.id));
     }
     
     return(
@@ -108,7 +114,12 @@ const RequestView = () => {
                                         <Icon name='pdf file outline' size='huge' color='red'/>
                                         Please Attach Your Request Document
                                     </Header>
-                                    <Button primary size='big'>Add Document</Button>
+                                    <Form onSubmit={onFileSubmit}>
+                                        <Form.Input type='file'
+                                                    onChange={(e) => {setFile(e.target.files[0])}} 
+                                        />
+                                        <Button primary size='big'>Add Document</Button>
+                                    </Form>
                                 </Segment>
                             </Grid.Column>
                     </Grid.Row>
