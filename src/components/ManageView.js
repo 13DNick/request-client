@@ -1,10 +1,11 @@
 import React, {useState, useEffect} from 'react';
-import { Container, Segment, Grid, Header } from 'semantic-ui-react';
+import { Container, Segment, Grid, Header, Button, Icon } from 'semantic-ui-react';
 import { Table, Thead, Tbody, Tr, Th, Td } from 'react-super-responsive-table';
 import 'react-super-responsive-table/dist/SuperResponsiveTableStyle.css';
 import Link from './Link';
 import backendAPI from '../api/backendAPI';
 import LoadingRequests from './LoadingRequests';
+import SearchBar from './SearchBar';
 
 const ManageView = () => {
     
@@ -35,6 +36,15 @@ const ManageView = () => {
         backgroundColor: '#21ba45',
         color: '#ffffff',
         textAlign: 'left'
+    }
+
+    function hover(e) {
+        e.target.style.background = '#1edc4b';
+        e.target.style.border = '#21ba45';  
+    }
+
+    function leave(e) {
+        e.target.style.background = '#21ba45';
     }
 
     const [requests, setRequests] = useState([]);
@@ -70,13 +80,14 @@ const ManageView = () => {
         setRequests(response.data);
     }
 
-    function hover(e) {
-        e.target.style.background = '#1edc4b';
-        e.target.style.border = '#21ba45';  
+    const search = (term, field) => {
+        console.log(term);
+        console.log(field);
     }
 
-    function leave(e) {
-        e.target.style.background = '#21ba45';
+    const reverse = () => {
+        const arr = [...requests].reverse();
+        setRequests(arr);
     }
 
     useEffect(() => {
@@ -142,7 +153,7 @@ const ManageView = () => {
                     </Grid.Column>
                     <Grid.Column>
                         <Segment textAlign='center' style={{border: 'none'}}>
-                            <Header as='h2'>
+                            <Header as='h1'>
                                 Manage Requests
                             </Header>
                         </Segment>
@@ -150,6 +161,21 @@ const ManageView = () => {
                 </Grid.Row>
             </Grid>
             
+            <Grid divided='vertically' relaxed stackable>
+                <Grid.Row columns={2}>
+                    <Grid.Column width={12}>
+                        <SearchBar callBack={() => search()}/>
+                    </Grid.Column>
+                    <Grid.Column width={4}>
+                        <Container textAlign='center'>
+                            <Button fluid icon labelPosition='left' color='yellow' size='huge' onClick={() => reverse()}>
+                                <Icon name='exchange' />
+                                Reverse List
+                            </Button>
+                        </Container>                      
+                    </Grid.Column>
+                </Grid.Row>
+            </Grid>
 
             <Segment color='red' padded>
                 {table()}              

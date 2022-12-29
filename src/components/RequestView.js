@@ -100,7 +100,7 @@ const RequestView = (props) => {
                     </Grid.Column>
                     <Grid.Column>
                         <Segment textAlign='center' style={{border: 'none'}}>
-                            <Header as='h2'>
+                            <Header as='h1'>
                                 Submit Your Request Below
                             </Header>
                         </Segment>
