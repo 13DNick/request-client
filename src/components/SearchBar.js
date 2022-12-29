@@ -18,8 +18,9 @@ class SearchBar extends React.Component{
         { key: 'id', text: 'ID', value: 'id' },
         { key: 'name', text: 'Name', value: 'name' },
         { key: 'email', text: 'Email', value: 'email' },
-        { key: 'department', text: 'Department', value: 'department' },
-        { key: 'status', text: 'Status', value: 'status' }
+        { key: 'department', text: 'Dept.', value: 'department' },
+        { key: 'status', text: 'Status', value: 'status' },
+        { key: 'employeeId', text: 'Emp. ID', value: 'employeeId' }
       ]
     
     render(){

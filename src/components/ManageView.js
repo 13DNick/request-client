@@ -6,6 +6,7 @@ import Link from './Link';
 import backendAPI from '../api/backendAPI';
 import LoadingRequests from './LoadingRequests';
 import SearchBar from './SearchBar';
+import NoResults from './NoResults';
 
 const ManageView = () => {
     
@@ -55,34 +56,66 @@ const ManageView = () => {
         setRequests(response.data);
     }
 
-    const getRequestsByName = async () => {
-        const response = await backendAPI.get('/api/request/name');
-        setRequests(response.data);
+    const sortRequestsByName = () => {
+        let temp = [...requests];
+        temp.sort((a, b) => a.name.localeCompare(b.name));
+        setRequests(temp);
     }
 
-    const getRequestsByEmployeeId = async () => {
-        const response = await backendAPI.get('/api/request/id');
-        setRequests(response.data);
+    const sortRequestsById = () => {
+        let temp = [...requests];
+        temp.sort((a, b) => a.id > b.id);
+        setRequests(temp);
     }
 
-    const getRequestsByEmail = async () => {
-        const response = await backendAPI.get('/api/request/email');
-        setRequests(response.data);
+    const sortRequestsByEmployeeId = () => {
+        let temp = [...requests];
+        temp.sort((a, b) => a.employeeId > b.employeeId);
+        setRequests(temp);
     }
 
-    const getRequestsByDepartment = async () => {
-        const response = await backendAPI.get('/api/request/department');
-        setRequests(response.data);
+    const sortRequestsByEmail = () => {
+        let temp = [...requests];
+        temp.sort((a, b) => a.email.localeCompare(b.email));
+        setRequests(temp);
     }
 
-    const getRequestsByStatus = async () => {
-        const response = await backendAPI.get('/api/request/status');
-        setRequests(response.data);
+    const sortRequestsByDepartment = () => {
+        let temp = [...requests];
+        temp.sort((a, b) => a.department.localeCompare(b.department));
+        setRequests(temp);
+    }
+
+    const sortRequestsByStatus = () => {
+        let temp = [...requests];
+        temp.sort((a, b) => a.employmentStatus.localeCompare(b.employmentStatus));
+        setRequests(temp);
     }
 
     const search = (term, field) => {
-        console.log(term);
-        console.log(field);
+        onRequestSearch(term, field);
+    }
+
+    const refresh = () => {
+        window.location.reload();
+    }
+
+    //search for request
+    const onRequestSearch = async (term, field) => {
+        
+        //do nothing if searchbar is empty
+        if(term === ''){
+            return;
+        }
+        
+        const response = await backendAPI.get(`/api/request/search`,{
+        params:{
+            term: term,
+            field: field 
+        }
+        });
+
+        setRequests(response.data);        
     }
 
     const reverse = () => {
@@ -95,21 +128,25 @@ const ManageView = () => {
     }, []);
 
     const table = () => {
-        if(requests === [] || requests === null || requests.length === 0){
+        if(requests === null){
             return(
                <LoadingRequests /> 
+            );
+        } else if(requests === [] || requests.length === 0){
+            return(
+                <NoResults refresh={refresh}/>
             );
         } else {
             return(
                 <Table style={tablestyle}>
                     <Thead style={theadstyle}>
                         <Tr style={{fontSize: '1.3em'}}>
-                            <Th style={thstyle} onClick={() => getRequests()} onMouseOver={hover} onMouseLeave={leave}>Request ID</Th>
-                            <Th style={thstyle} onClick={() => getRequestsByName()} onMouseOver={hover} onMouseLeave={leave}>Name</Th>
-                            <Th style={thstyle} onClick={() => getRequestsByEmail()} onMouseOver={hover} onMouseLeave={leave}>Email</Th>
-                            <Th style={thstyle} onClick={() => getRequestsByEmployeeId()} onMouseOver={hover} onMouseLeave={leave}>Employee ID</Th>
-                            <Th style={thstyle} onClick={() => getRequestsByDepartment()} onMouseOver={hover} onMouseLeave={leave}>Department</Th>
-                            <Th style={thstyle} onClick={() => getRequestsByStatus()} onMouseOver={hover} onMouseLeave={leave}>Employment Status</Th>
+                            <Th style={thstyle} onClick={() => sortRequestsById()} onMouseOver={hover} onMouseLeave={leave}>Request ID</Th>
+                            <Th style={thstyle} onClick={() => sortRequestsByName()} onMouseOver={hover} onMouseLeave={leave}>Name</Th>
+                            <Th style={thstyle} onClick={() => sortRequestsByEmail()} onMouseOver={hover} onMouseLeave={leave}>Email</Th>
+                            <Th style={thstyle} onClick={() => sortRequestsByEmployeeId()} onMouseOver={hover} onMouseLeave={leave}>Employee ID</Th>
+                            <Th style={thstyle} onClick={() => sortRequestsByDepartment()} onMouseOver={hover} onMouseLeave={leave}>Department</Th>
+                            <Th style={thstyle} onClick={() => sortRequestsByStatus()} onMouseOver={hover} onMouseLeave={leave}>Employment Status</Th>
                             <Th style={ths}>Document</Th>
                         </Tr>
                     </Thead>
@@ -164,14 +201,26 @@ const ManageView = () => {
             <Grid divided='vertically' relaxed stackable>
                 <Grid.Row columns={2}>
                     <Grid.Column width={12}>
-                        <SearchBar callBack={() => search()}/>
+                        <SearchBar callBack={(term, field) => search(term, field)}/>
                     </Grid.Column>
                     <Grid.Column width={4}>
                         <Container textAlign='center'>
-                            <Button fluid icon labelPosition='left' color='yellow' size='huge' onClick={() => reverse()}>
-                                <Icon name='exchange' />
-                                Reverse List
-                            </Button>
+                            <Grid divided='vertically' stackable>
+                                <Grid.Row columns={2}>
+                                    <Grid.Column>
+                                        <Button fluid icon color='yellow' size='big' onClick={() => reverse()}>
+                                            <Icon name='exchange' />
+                                        </Button>
+                                    </Grid.Column>
+                                    <Grid.Column>
+                                        <Button fluid icon color='red' size='big' onClick={() => refresh()}>
+                                            <Icon name='refresh' />
+                                        </Button>
+                                    </Grid.Column>
+                                </Grid.Row>
+                            </Grid>
+                            
+                            
                         </Container>                      
                     </Grid.Column>
                 </Grid.Row>
