@@ -1,13 +1,20 @@
 import React, {useState, useEffect} from 'react';
-import { Container, Segment, Form, Grid, Button, Header, Icon } from 'semantic-ui-react';
+import { Container, Segment, Grid, Header } from 'semantic-ui-react';
 import { Table, Thead, Tbody, Tr, Th, Td } from 'react-super-responsive-table';
 import 'react-super-responsive-table/dist/SuperResponsiveTableStyle.css';
 import Link from './Link';
 import backendAPI from '../api/backendAPI';
+import LoadingRequests from './LoadingRequests';
 
 const ManageView = () => {
     
     const thstyle = { 
+        borderBottom: '2px solid #ddd',
+        padding: '12px 15px',
+        cursor: 'pointer'
+    }
+
+    const ths = { 
         borderBottom: '2px solid #ddd',
         padding: '12px 15px'
     }
@@ -38,6 +45,39 @@ const ManageView = () => {
         setRequests(response.data);
     }
 
+    const getRequestsByName = async () => {
+        const response = await backendAPI.get('/api/request/name');
+        setRequests(response.data);
+    }
+
+    const getRequestsByEmployeeId = async () => {
+        const response = await backendAPI.get('/api/request/id');
+        setRequests(response.data);
+    }
+
+    const getRequestsByEmail = async () => {
+        const response = await backendAPI.get('/api/request/email');
+        setRequests(response.data);
+    }
+
+    const getRequestsByDepartment = async () => {
+        const response = await backendAPI.get('/api/request/department');
+        setRequests(response.data);
+    }
+
+    const getRequestsByStatus = async () => {
+        const response = await backendAPI.get('/api/request/status');
+        setRequests(response.data);
+    }
+
+    function hover(e) {
+        e.target.style.background = '#1edc4b';
+        e.target.style.border = '#21ba45';  
+    }
+
+    function leave(e) {
+        e.target.style.background = '#21ba45';
+    }
 
     useEffect(() => {
         getRequests();
@@ -45,19 +85,21 @@ const ManageView = () => {
 
     const table = () => {
         if(requests === [] || requests === null || requests.length === 0){
-            return<div>no requests</div>
+            return(
+               <LoadingRequests /> 
+            );
         } else {
             return(
                 <Table style={tablestyle}>
                     <Thead style={theadstyle}>
                         <Tr style={{fontSize: '1.3em'}}>
-                            <Th style={thstyle}>Request ID</Th>
-                            <Th style={thstyle}>Name</Th>
-                            <Th style={thstyle}>Email</Th>
-                            <Th style={thstyle}>Employee ID</Th>
-                            <Th style={thstyle}>Department</Th>
-                            <Th style={thstyle}>Employment Status</Th>
-                            <Th style={thstyle}>Document</Th>
+                            <Th style={thstyle} onClick={() => getRequests()} onMouseOver={hover} onMouseLeave={leave}>Request ID</Th>
+                            <Th style={thstyle} onClick={() => getRequestsByName()} onMouseOver={hover} onMouseLeave={leave}>Name</Th>
+                            <Th style={thstyle} onClick={() => getRequestsByEmail()} onMouseOver={hover} onMouseLeave={leave}>Email</Th>
+                            <Th style={thstyle} onClick={() => getRequestsByEmployeeId()} onMouseOver={hover} onMouseLeave={leave}>Employee ID</Th>
+                            <Th style={thstyle} onClick={() => getRequestsByDepartment()} onMouseOver={hover} onMouseLeave={leave}>Department</Th>
+                            <Th style={thstyle} onClick={() => getRequestsByStatus()} onMouseOver={hover} onMouseLeave={leave}>Employment Status</Th>
+                            <Th style={ths}>Document</Th>
                         </Tr>
                     </Thead>
                     <Tbody>

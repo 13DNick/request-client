@@ -13,7 +13,6 @@ const RequestView = (props) => {
     const [employeeId, setEmployeeId] = useState('');
     const [department, setDepartment] = useState('');
     const [employmentStatus, setEmploymentStatus] = useState('currently employed');
-    const [resp, setResp] = useState('');
     const [file, setFile] = useState(null);
 
     // Create a reference to the hidden file input element
@@ -50,7 +49,6 @@ const RequestView = (props) => {
                     'Content-Type': 'multipart/form-data'
                 }
         });
-        setResp(response.data);
         props.callBack(response.data.id);
         reset();
         updateURL();
